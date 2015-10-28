@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtendPaste", "ContributedPlugins\ExtendPaste\ExtendPaste.csproj", "{A6A3F2DF-24B0-4471-88C2-1898167A976E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectProfile", "ContributedPlugins\ConnectProfile\ConnectProfile.csproj", "{4D9042BA-ECD8-4B00-B01B-55BE761293BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BroadcastCommand", "ContributedPlugins\BroadcastCommand\BroadcastCommand.csproj", "{4D9042BA-ECD8-4B00-B01B-55BE761293BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
