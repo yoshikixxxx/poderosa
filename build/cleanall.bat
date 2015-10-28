@@ -24,6 +24,7 @@ call :clean "%PROJDIR%\Usability"
 call :clean "%PROJDIR%\XZModem"
 
 call :clean "%PROJDIR%\ContributedPlugins\ExtendPaste"
+call :clean "%PROJDIR%\ContributedPlugins\ConnectProfile"
 
 call :clean "%PROJDIR%"
 
