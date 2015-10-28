@@ -6,7 +6,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtendPaste", "ContributedPlugins\ExtendPaste\ExtendPaste.csproj", "{A6A3F2DF-24B0-4471-88C2-1898167A976E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectProfile", "ContributedPlugins\ConnectProfile\ConnectProfile.csproj", "{4D9042BA-ECD8-4B00-B01B-55BE761293BD}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BroadcastCommand", "ContributedPlugins\BroadcastCommand\BroadcastCommand.csproj", "{4D9042BA-ECD8-4B00-B01B-55BE761293BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BroadcastCommand", "ContributedPlugins\BroadcastCommand\BroadcastCommand.csproj", "{741A0DEE-8B9F-4687-9569-E938F23A2258}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,6 +23,10 @@ Global
 		{4D9042BA-ECD8-4B00-B01B-55BE761293BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D9042BA-ECD8-4B00-B01B-55BE761293BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D9042BA-ECD8-4B00-B01B-55BE761293BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{741A0DEE-8B9F-4687-9569-E938F23A2258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{741A0DEE-8B9F-4687-9569-E938F23A2258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{741A0DEE-8B9F-4687-9569-E938F23A2258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{741A0DEE-8B9F-4687-9569-E938F23A2258}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
