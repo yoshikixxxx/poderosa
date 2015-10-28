@@ -56,7 +56,7 @@ copy "%PROJDIR%\Doc\Help\*_ja.chm" "%DOCDIST_JA%"
 
 REM =====================================
 
-for %%P in ( ExtendPaste ) do (
+for %%P in ( ExtendPaste BroadcastCommand ) do (
   MD "%DISTCONTRIB%\%%P"
   copy "%BINDIR%\%%P\*.dll" "%DISTCONTRIB%\%%P"
   copy "%BINDIR%\%%P\*.pdb" "%DISTCONTRIB%\%%P"
