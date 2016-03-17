@@ -45,14 +45,17 @@
       <HintPath>..\..\bin\Release\Poderosa.Plugin.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Poderosa.TerminalEmulator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Poderosa.TerminalEmulator">
       <HintPath>..\..\bin\Release\Poderosa.TerminalEmulator.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Poderosa.TerminalSession, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Poderosa.TerminalSession">
       <HintPath>..\..\bin\Release\Poderosa.TerminalSession.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Poderosa.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Release\Poderosa.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
