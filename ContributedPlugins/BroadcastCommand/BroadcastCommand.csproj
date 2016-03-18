@@ -45,6 +45,10 @@
       <HintPath>..\..\bin\Release\Poderosa.Plugin.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Poderosa.Protocols">
+      <HintPath>..\..\bin\Release\Poderosa.Protocols.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Poderosa.TerminalEmulator">
       <HintPath>..\..\bin\Release\Poderosa.TerminalEmulator.dll</HintPath>
       <Private>False</Private>
