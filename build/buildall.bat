@@ -17,7 +17,7 @@ if "%2" == "GA" (
 
   set PRJDIR=%GITHUB_WORKSPACE%
 ) else (
-  call "%VS120COMNTOOLS%\vsvars32.bat"
+  call "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
   set PRJDIR=%~dp0..
   set CLEAN=yes
 )
