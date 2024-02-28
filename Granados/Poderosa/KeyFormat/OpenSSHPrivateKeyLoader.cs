@@ -278,8 +278,8 @@ namespace Granados.Poderosa.KeyFormat {
                         throw new SSHException(Strings.GetString("UnsupportedEllipticCurveInKeyPair"));
                     }
 
-                    ECPoint ecPublicKeyPoint;
-                    if (!ECPoint.Parse(publicKey, curve, out ecPublicKeyPoint)) {
+                    PKI.ECPoint ecPublicKeyPoint;
+                    if (!PKI.ECPoint.Parse(publicKey, curve, out ecPublicKeyPoint)) {
                         throw new SSHException(Strings.GetString("KeysAreBroken"));
                     }
 
@@ -625,7 +625,7 @@ namespace Granados.Poderosa.KeyFormat {
                                     if (data_point == null) {
                                         throw new SSHException(Strings.GetString("NotValidPrivateKeyFile"));
                                     }
-                                    ECPoint point = ECPoint.ParseUncompressed(data_point);
+                                    PKI.ECPoint point = PKI.ECPoint.ParseUncompressed(data_point);
                                     if (point == null) {
                                         throw new SSHException(Strings.GetString("NotValidPrivateKeyFile"));
                                     }
