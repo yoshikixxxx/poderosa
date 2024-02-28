@@ -42,6 +42,18 @@ namespace Poderosa.Boot {
             string preference_home = ResolveProfileDirectory("appdata");
             string open_file = null;
 
+            string exe_dir = getMyExeDirName();
+            string config_dir = Path.Combine(exe_dir, "config");
+            preference_home = Path.Combine(config_dir, System.Environment.UserName.ToLowerInvariant());
+            try {
+                Directory.CreateDirectory(config_dir);
+            } catch {
+            }
+            try {
+                Directory.CreateDirectory(preference_home);
+            } catch {
+            }
+
             PluginManifest pm;
             if (isMonolithic)
                 pm = PluginManifest.CreateEmptyManifest();
@@ -49,35 +61,35 @@ namespace Poderosa.Boot {
                 pm = PluginManifest.CreateByFileSystem(home_directory);
 
             //コマンドライン引数を読む
-            int i = 0;
-            while (i < args.Length) {
-                string t = args[i];
-                string v = i < args.Length - 1 ? args[i + 1] : "";
-                switch (t) {
-                    case "-p":
-                    case "--profile":
-                        preference_home = ResolveProfileDirectory(v);
-                        i += 2;
-                        break;
-                    case "-a":
-                    case "--addasm":
-                        pm.AddAssembly(home_directory, v.Split(';'));
-                        i += 2;
-                        break;
-                    case "-r":
-                    case "--remasm":
-                        pm.RemoveAssembly(home_directory, v.Split(';'));
-                        i += 2;
-                        break;
-                    case "-open":
-                        open_file = v;
-                        i += 2;
-                        break;
-                    default:
-                        i++;
-                        break;
-                }
-            }
+            //int i = 0;
+            //while (i < args.Length) {
+            //    string t = args[i];
+            //    string v = i < args.Length - 1 ? args[i + 1] : "";
+            //    switch (t) {
+            //        case "-p":
+            //        case "--profile":
+            //            preference_home = ResolveProfileDirectory(v);
+            //            i += 2;
+            //            break;
+            //        case "-a":
+            //        case "--addasm":
+            //            pm.AddAssembly(home_directory, v.Split(';'));
+            //            i += 2;
+            //            break;
+            //        case "-r":
+            //        case "--remasm":
+            //            pm.RemoveAssembly(home_directory, v.Split(';'));
+            //            i += 2;
+            //            break;
+            //        case "-open":
+            //            open_file = v;
+            //            i += 2;
+            //            break;
+            //        default:
+            //            i++;
+            //            break;
+            //    }
+            //}
 
             if (open_file != null && TryToSendOpenFileMessage(open_file)) {
                 return null;    // exit this instance
@@ -85,6 +97,20 @@ namespace Poderosa.Boot {
 
             PoderosaStartupContext ctx = new PoderosaStartupContext(pm, home_directory, preference_home, args, open_file);
             return new InternalPoderosaWorld(ctx);
+        }
+
+        static string getMyExeFileName() {
+            try {
+                Assembly mainAssembly = Assembly.GetEntryAssembly();
+                Module[] modules = mainAssembly.GetModules();
+                return modules[0].FullyQualifiedName;
+            } catch {
+                return "";
+            }
+        }
+
+        static string getMyExeDirName() {
+            return Path.GetDirectoryName(getMyExeFileName());
         }
 
         [Obsolete]
