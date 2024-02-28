@@ -21,6 +21,8 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Reflection;
+using System.IO;
 
 using Poderosa.Util;
 using Poderosa.Plugins;
@@ -51,6 +53,9 @@ namespace Poderosa.Forms {
 
             this.ImeMode = ImeMode.NoControl;
             this.AllowDrop = true;
+
+            // Padding
+            this.Padding = new Padding(1, 0, 1, 0);
 
             arg.ApplyToUnloadedWindow(this);
 
@@ -301,17 +306,17 @@ namespace Poderosa.Forms {
             SessionManagerPlugin.Instance.ActivateDocument(KeyToDocument(key), ActivateReason.TabClick);
         }
         public void MouseMiddleButton(TabKey key) {
-            IPoderosaDocument doc = KeyToDocument(key);
-            SessionManagerPlugin sm = SessionManagerPlugin.Instance;
+            //IPoderosaDocument doc = KeyToDocument(key);
+            //SessionManagerPlugin sm = SessionManagerPlugin.Instance;
 
-            bool was_active = _tabBarTable.ActiveTabKey == key;
-            IPoderosaView view = sm.FindDocumentHost(doc).LastAttachedView;
-            sm.CloseDocument(doc);
+            //bool was_active = _tabBarTable.ActiveTabKey == key;
+            //IPoderosaView view = sm.FindDocumentHost(doc).LastAttachedView;
+            //sm.CloseDocument(doc);
 
             //アクティブなやつを閉じたらば
-            if (was_active && view != null && view.Document != null) {
-                sm.ActivateDocument(view.Document, ActivateReason.InternalAction);
-            }
+            //if (was_active && view != null && view.Document != null) {
+            //    sm.ActivateDocument(view.Document, ActivateReason.InternalAction);
+            //}
         }
         public void MouseRightButton(TabKey key) {
             IPoderosaDocument doc = KeyToDocument(key);
@@ -474,13 +479,54 @@ namespace Poderosa.Forms {
         }
     }
 
+    internal static class BuildTimeStampUtil {
+        public static DateTime GetLinkerTimestampUtc(Assembly assembly) {
+            var location = assembly.Location;
+            return GetLinkerTimestampUtc(location);
+        }
+
+        public static DateTime GetLinkerTimestampUtc(string filePath) {
+            const int peHeaderOffset = 60;
+            const int linkerTimestampOffset = 8;
+            var bytes = new byte[2048];
+
+            using (var file = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+                file.Read(bytes, 0, bytes.Length);
+            }
+
+            var headerPos = BitConverter.ToInt32(bytes, peHeaderOffset);
+            var secondsSince1970 = BitConverter.ToInt32(bytes, headerPos + linkerTimestampOffset);
+            var dt = new DateTime(1970, 1, 1, 9, 0, 0, DateTimeKind.Utc);
+            return dt.AddSeconds(secondsSince1970);
+        }
+
+        static DateTime GetThisAssemblyBuildDateInternal() {
+            return GetLinkerTimestampUtc(typeof(BuildTimeStampUtil).Assembly);
+        }
+
+        static DateTime? cached = null;
+
+        public static DateTime GetThisAssemblyBuildDate() {
+            if (cached == null) {
+                cached = GetThisAssemblyBuildDateInternal();
+            }
+
+            return cached.Value;
+        }
+    }
+
     internal class WindowCaptionManager : IActiveDocumentChangeListener {
+        public static string GetTimeStampStr() {
+            var dt = BuildTimeStampUtil.GetThisAssemblyBuildDate();
+            return string.Format("{0} {1:D4}.{2:D2}.{3:D2}", VersionInfo.PODEROSA_VERSION, dt.Year, dt.Month, dt.Day);
+        }
+
         public void OnDocumentActivated(IPoderosaMainWindow window, IPoderosaDocument document) {
-            window.AsForm().Text = String.Format("{0} - Poderosa", document.Caption);
+            window.AsForm().Text = String.Format("{0} - Poderosa {1}", document.Caption, GetTimeStampStr());
         }
 
         public void OnDocumentDeactivated(IPoderosaMainWindow window) {
-            window.AsForm().Text = "Poderosa";
+            window.AsForm().Text = string.Format("Poderosa {0}", GetTimeStampStr());
         }
     }
 }
