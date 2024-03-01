@@ -454,6 +454,13 @@ namespace Poderosa.Terminal {
             if (sl.LogType == LogType.None)
                 return;
 
+            // ログディレクトリ作成
+            try {
+                string LogFullPath = Path.GetDirectoryName(Path.GetFullPath(sl.LogPath));
+                Directory.CreateDirectory(LogFullPath);
+            } catch {
+            }
+
             FileStream fs = new FileStream(sl.LogPath, sl.LogAppend ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read);
             ISimpleLogSettings loginfo = (ISimpleLogSettings)sl.Clone();
             switch (sl.LogType) {

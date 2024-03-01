@@ -306,17 +306,17 @@ namespace Poderosa.Forms {
             SessionManagerPlugin.Instance.ActivateDocument(KeyToDocument(key), ActivateReason.TabClick);
         }
         public void MouseMiddleButton(TabKey key) {
-            //IPoderosaDocument doc = KeyToDocument(key);
-            //SessionManagerPlugin sm = SessionManagerPlugin.Instance;
+            IPoderosaDocument doc = KeyToDocument(key);
+            SessionManagerPlugin sm = SessionManagerPlugin.Instance;
 
-            //bool was_active = _tabBarTable.ActiveTabKey == key;
-            //IPoderosaView view = sm.FindDocumentHost(doc).LastAttachedView;
-            //sm.CloseDocument(doc);
+            bool was_active = _tabBarTable.ActiveTabKey == key;
+            IPoderosaView view = sm.FindDocumentHost(doc).LastAttachedView;
+            sm.CloseDocument(doc);
 
             //アクティブなやつを閉じたらば
-            //if (was_active && view != null && view.Document != null) {
-            //    sm.ActivateDocument(view.Document, ActivateReason.InternalAction);
-            //}
+            if (was_active && view != null && view.Document != null) {
+                sm.ActivateDocument(view.Document, ActivateReason.InternalAction);
+            }
         }
         public void MouseRightButton(TabKey key) {
             IPoderosaDocument doc = KeyToDocument(key);
