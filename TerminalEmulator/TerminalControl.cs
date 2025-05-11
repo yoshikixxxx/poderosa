@@ -747,6 +747,39 @@ namespace Poderosa.Terminal {
             else
                 return GEnv.DefaultRenderProfile;
         }
+
+        public void SetFontSizeWhenMouseWheel(bool Large)
+        {
+            int minSize = 6;
+            int maxSize = 72;
+            RenderProfile prof;
+
+            if (_session != null) {
+                // レンダープロファイル取得
+                ITerminalSettings ts = _session.TerminalSettings;
+                if (ts.UsingDefaultRenderProfile) { prof = (RenderProfile)GEnv.DefaultRenderProfile; }
+                else { prof = (RenderProfile)ts.RenderProfile.Clone(); }
+
+                // フォントサイズ取得
+                float fontSize = prof.FontSize;
+
+                // フォントサイズ変更
+                if (Large) { fontSize++; }
+                else { fontSize--; }
+                if (fontSize < minSize) { fontSize = minSize; }
+                else if (fontSize > maxSize) { fontSize = maxSize; }
+                prof.FontSize = fontSize;
+
+                // レンダープロファイル適用
+                ts.BeginUpdate();
+                ts.RenderProfile = prof;
+                ts.EndUpdate();
+
+                // フォントサイズ表示(右下ToolTips)
+                ShowFontSizeTip(fontSize);
+            }
+        }
+
         protected override void CommitTransientScrollBar() {
             if (_session != null) {	// TerminalPaneを閉じるタイミングでこのメソッドが呼ばれたときにNullReferenceExceptionになるのを防ぐ
                 _ignoreValueChangeEvent = true;
@@ -812,6 +845,22 @@ namespace Poderosa.Terminal {
             _sizeTipTimer.Stop();
             _sizeTipTimer.Start();
         }
+
+        private void ShowFontSizeTip(float size) {
+            const int MARGIN = 8;
+            if (!this.Visible)
+                return;
+
+            Point pt = new Point(this.Width - _VScrollBar.Width - _sizeTip.Width - MARGIN, this.Height - _sizeTip.Height - MARGIN);
+
+            _sizeTip.Text = String.Format("{0:#.#}pt", size);
+            _sizeTip.Location = pt;
+            _sizeTip.Visible = true;
+
+            _sizeTipTimer.Stop();
+            _sizeTipTimer.Start();
+        }
+
         //ピクセル単位のサイズを受け取り、チップを表示
         public void SplitterDragging(int width, int height) {
             SizeF charSize = GetRenderProfile().Pitch;
@@ -1083,6 +1132,14 @@ namespace Poderosa.Terminal {
         public override UIHandleResult OnMouseWheel(MouseEventArgs args) {
             if (!_control.HasDocument)
                 return UIHandleResult.Pass;
+
+            // Ctrl+ホイールスクロールでフォントサイズ変更
+            // (当該クラス内ではRenderProfile変更処理ができないためTerminalControlクラス側で変更処理を実装)
+            if (Control.ModifierKeys.Equals(Keys.Control)) {
+                if (args.Delta > 0) { _control.SetFontSizeWhenMouseWheel(true); }
+                else { _control.SetFontSizeWhenMouseWheel(false); }
+                return UIHandleResult.Stop;
+            }
 
             lock (_terminalSync) {
                 if (_terminal != null && !GEnv.Options.AllowsScrollInAppMode && _terminal.TerminalMode == TerminalMode.Application) {
