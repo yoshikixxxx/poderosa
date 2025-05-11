@@ -1,4 +1,4 @@
-﻿// Copyright 2004-2017 The Poderosa Project.
+﻿// Copyright 2004-2025 The Poderosa Project.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -188,7 +188,7 @@ namespace Poderosa.Boot {
             Debug.Assert(pluginManifest != null);
             _pluginManifest = pluginManifest;
             _preferenceFileName = Path.Combine(_profileHomeDirectory, "options.conf");
-            _preferences = BuildPreference(_preferenceFileName);
+            _preferences = PreferencesIO.ReadPreferences(_preferenceFileName);
         }
         public PoderosaStartupContext(PluginManifest pluginManifest, string home_directory, StructuredText preference, string[] args, string open_file) {
             _instance = this;
@@ -244,8 +244,6 @@ namespace Poderosa.Boot {
             }
         }
 
-
-
         public ITracer Tracer {
             get {
                 return _tracer;
@@ -253,24 +251,6 @@ namespace Poderosa.Boot {
             set {
                 _tracer = value;
             }
-        }
-
-        private static StructuredText BuildPreference(string preference_file) {
-            //TODO 例外時などどこか適当に通知が必要
-            StructuredText pref = null;
-            if (File.Exists(preference_file)) {
-                using (TextReader r = new StreamReader(preference_file, Encoding.Default)) {
-                    pref = new TextStructuredTextReader(r).Read();
-                }
-                // Note:
-                //   if the file is empty or consists of empty lines,
-                //   pref will be null.
-            }
-
-            if (pref == null)
-                pref = new StructuredText("Poderosa");
-
-            return pref;
         }
 
     }

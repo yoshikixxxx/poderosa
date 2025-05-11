@@ -1,4 +1,4 @@
-﻿// Copyright 2004-2017 The Poderosa Project.
+﻿// Copyright 2004-2025 The Poderosa Project.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 using NUnit.Framework;
 using Poderosa.ConnectionParam;
 using Poderosa.Plugins;
+using Poderosa.Serializing;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -35,8 +36,32 @@ namespace Poderosa.Terminal {
 
         [Test]
         public void Test0() {
+            SerializationOptions opt = new SerializationOptions();
             TerminalSettings ts1 = new TerminalSettings();
-            StructuredText storage = _terminalSettingsSerializer.Serialize(ts1);
+            StructuredText storage = _terminalSettingsSerializer.Serialize(ts1, opt);
+            TerminalSettings ts2 = (TerminalSettings)_terminalSettingsSerializer.Deserialize(storage);
+
+            Assert.AreEqual(EncodingType.ISO8859_1, ts1.Encoding);
+            Assert.AreEqual(false, ts1.LocalEcho);
+            Assert.AreEqual(NewLine.CR, ts1.TransmitNL);
+            Assert.AreEqual(LineFeedRule.Normal, ts1.LineFeedRule);
+            Assert.AreEqual(TerminalType.XTerm256Color, ts1.TerminalType);
+
+            Assert.AreEqual(EncodingType.ISO8859_1, ts2.Encoding);
+            Assert.AreEqual(false, ts2.LocalEcho);
+            Assert.AreEqual(NewLine.CR, ts2.TransmitNL);
+            Assert.AreEqual(LineFeedRule.Normal, ts2.LineFeedRule);
+            Assert.AreEqual(TerminalType.XTerm256Color, ts2.TerminalType);
+        }
+
+        [Test]
+        public void Test0_oldDefaultTerminalType() {
+            SerializationOptions opt = new SerializationOptions();
+            TerminalSettings ts1 = new TerminalSettings();
+            ts1.BeginUpdate();
+            ts1.TerminalType = TerminalType.XTerm; // old default typeminal type
+            ts1.EndUpdate();
+            StructuredText storage = _terminalSettingsSerializer.Serialize(ts1, opt);
             TerminalSettings ts2 = (TerminalSettings)_terminalSettingsSerializer.Deserialize(storage);
 
             Assert.AreEqual(EncodingType.ISO8859_1, ts1.Encoding);
@@ -54,6 +79,7 @@ namespace Poderosa.Terminal {
 
         [Test]
         public void Test1() {
+            SerializationOptions opt = new SerializationOptions();
             TerminalSettings ts1 = new TerminalSettings();
             ts1.BeginUpdate();
             ts1.Encoding = EncodingType.SHIFT_JIS;
@@ -62,7 +88,7 @@ namespace Poderosa.Terminal {
             ts1.TerminalType = TerminalType.VT100;
             ts1.EndUpdate();
 
-            StructuredText storage = _terminalSettingsSerializer.Serialize(ts1);
+            StructuredText storage = _terminalSettingsSerializer.Serialize(ts1, opt);
             //確認
             StringWriter wr = new StringWriter();
             new TextStructuredTextWriter(wr).Write(storage);
@@ -84,7 +110,7 @@ namespace Poderosa.Terminal {
             StructuredText storage = new TextStructuredTextReader(reader).Read();
 
             TerminalSettings ts = (TerminalSettings)_terminalSettingsSerializer.Deserialize(storage);
-            Assert.AreEqual(EncodingType.ISO8859_1, ts.Encoding);
+            Assert.AreEqual(EncodingType.UTF8_Latin, ts.Encoding);
             Assert.AreEqual(false, ts.LocalEcho);
             Assert.AreEqual(NewLine.CR, ts.TransmitNL);
             Assert.AreEqual(LineFeedRule.Normal, ts.LineFeedRule);
@@ -107,7 +133,10 @@ namespace Poderosa.Terminal {
                 }
             }
 
-            public IPoderosaCulture Culture { get; private set; }
+            public IPoderosaCulture Culture {
+                get;
+                private set;
+            }
 
             public IAdaptable GetAdapter(System.Type adapter) {
                 throw new NotImplementedException();
